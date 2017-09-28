@@ -1,0 +1,47 @@
+[
+  {
+    "buyIndicator": "NO", 
+    "buyQuantity": 0.0, 
+    "curPrice": "171.55", 
+    "gain": "4.32", 
+    "newEntrant": "No", 
+    "sellQuantity": 27459.0, 
+    "symbol": "ONGC"
+  }, 
+  {
+    "buyIndicator": "NO", 
+    "buyQuantity": 0.0, 
+    "curPrice": "1,274.25", 
+    "gain": "4.22", 
+    "newEntrant": "No", 
+    "sellQuantity": 2.0, 
+    "symbol": "BHARATFORG"
+  }, 
+  {
+    "buyIndicator": "NO", 
+    "buyQuantity": 0.0, 
+    "curPrice": "204.70", 
+    "gain": "4.09", 
+    "newEntrant": "No", 
+    "sellQuantity": 9.0, 
+    "symbol": "TATAGLOBAL"
+  }, 
+  {
+    "buyIndicator": "NO", 
+    "buyQuantity": 0.0, 
+    "curPrice": "318.20", 
+    "gain": "3.82", 
+    "newEntrant": "No", 
+    "sellQuantity": 4231.0, 
+    "symbol": "VEDL"
+  }, 
+  {
+    "buyIndicator": "YES", 
+    "buyQuantity": 1317.0, 
+    "curPrice": "643.80", 
+    "gain": "3.51", 
+    "newEntrant": "No", 
+    "sellQuantity": 0.0, 
+    "symbol": "ESCORTS"
+  }
+]
