@@ -16,12 +16,21 @@
 		
 		<style type = "text/css">
          #spinner-1 input {width: 100px}
+		 .table th{
+			border: #ADD8E6 solid 1px !important;
+		}
+		.table td{
+			border: #ADD8E6 solid 1px !important;
+		}
+		.mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+			padding: 8px;
+		}
       </style>
 	  
     </head>
  
     <body>
-		<p align="center" style="width:500px;padding:5px; ">
+		<p align="center" style="padding:5px; ">
             <button class="btn btn-primary" type="button" onclick="show()" align="left">Refresh Gainers</button>
         </p>
 	 
@@ -40,21 +49,26 @@
 		 -->
  
         <!-- display all articles -->
-        <div style="width:500px;padding:10px;" id="content">
-            <h5 style="text-align:center"><i  > Gainers </i></h5>
+        <div style="padding:10px;" id="content" align="center">
+            
  
-            <table id="added-articles" class="table-bordered table-sm">
+            <table id="added-articles" class="table-bordered table mytable">
                 <tr>
                     <th>BKT</th>
                     <th>Symbol</th>
-                    <th>Gain</th>
+                    <th>Gain%</th>
+					<th>ActGain</th>
 					<th>CMP</th>
 					<th>High</th>
+					<th>Low</th>
+					<th>Close</th>
 					<th>BQty</th>
 					<th>SQty</th>
-					<th>Buy?</th>
 					<th>New?</th>
+					<th>Buy?</th>
 					<th>Inc?</th>
+					<th>Thres?</th>
+					<th>Score</th>
                 </tr>
             </table>
         </div>

@@ -17,7 +17,7 @@ def js():
 def refreshGainers():
 
     print "Getting it now"
-    bucketSMSList, text = processResults()
+    bucketSMSList, text = getGainers()
 
     sms = ""
     # for key, value in bucketSMSList.items():

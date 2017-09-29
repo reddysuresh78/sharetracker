@@ -22,7 +22,7 @@ def getFnOVolsFromURL(scrip):
     page = opener.open(r).read()
 
     # page = urllib2.urlopen(fnoData)
-    soup = BeautifulSoup(page, "html5lib")
+    soup = BeautifulSoup(page, "lxml")
     fnoTable = soup.find(id="octable")
 
     return fnoTable
@@ -72,7 +72,7 @@ def getCurValue(scrip):
     page = opener.open(r).read()
 
     # page = urllib2.urlopen(fnoData)
-    soup = BeautifulSoup(page, "html5lib")
+    soup = BeautifulSoup(page, "lxml")
     val = soup.find(id="responseDiv").text
 
     j = json.loads(val)
@@ -97,7 +97,7 @@ def getFnOScripsFromURL():
     page = opener.open(r).read()
 
     # page = urllib2.urlopen(fnoData)
-    soup = BeautifulSoup(page, "html5lib")
+    soup = BeautifulSoup(page, "lxml")
     fnoTable = soup.find('table')
 
     return fnoTable

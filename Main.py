@@ -1,17 +1,15 @@
-from ShareUtils import *
-from SMSUtils import *
+import math
+import time
+from collections import defaultdict
+from collections import deque
+from multiprocessing.dummy import Pool  # This is a thread-based Pool
+from multiprocessing import cpu_count
+
+import schedule
+
 from FnOUtils import *
 from InterestedStocks import *
-from collections import defaultdict
-import schedule
-import math
-
-import time
-import re
-from time import gmtime, strftime
-
-from collections import deque
-from pprint import pprint
+from ShareUtils import *
 
 #Global deque
 que = deque(maxlen=10)
@@ -79,6 +77,14 @@ def getSMSText(scrips ):
         curRow['buyIndicator'] = "Y" if (row.buyIndicator=="YES") else "N"
         curRow['newEntrant'] = "N"
         curRow['increased'] = row.goodChange
+        curRow['dayLow'] = row.dayLow
+        curRow['previousClose'] = row.previousClose
+        if(getfloat(row.previousClose) != 0):
+            curRow['gainVal'] = round(getfloat(row.CurPrice) - getfloat(row.previousClose), 2)
+        else:
+            curRow['gainVal'] = "-"
+
+        curRow['threshold'] = "Y" if (getfloat(row.threshold) <= getfloat(row.Gain) ) else "N"
 
         text = text + row.SMSSymbol
         if (row.buyIndicator == 'YES'):
@@ -117,27 +123,16 @@ def getSMSText(scrips ):
 
     return smsPerBucket, text
 
+#Not used now
 def prepareAndSendSMS(scrips):
 
     to = "9000111935"
     user = "9000111935"
     pwd = "M2924R"
 
-    # bestScrips = scrips.loc[scrips.buyIndicator == 'YES']
-
     bucketSMSList, text = getSMSText(scrips )
 
     return bucketSMSList, text
-
-
-    # okScrips = scrips.loc[scrips.buyIndicator == 'NO']
-    #
-    # bucketSMSList, text = getSMSText(okScrips, True)
-
-    # for key, value in bucketSMSList.items():
-    #     print str(key) + " " + str(value)
-
-    # print( strftime("%H:%M:%S", time.localtime()) + ":# " +  text)
     # sendSMS(user,pwd, to, text)
 
 
@@ -148,29 +143,66 @@ def getVolumesForGoodScrips(scripsDF):
     scripsDF['Symbol'] = ""
     scripsDF['SMSSymbol'] = ""
     scripsDF['dayHigh'] = ""
+    scripsDF['threshold'] = ""
+    scripsDF['dayLow'] = ""
+    scripsDF['previousClose'] = ""
+
+
+    topTwenty = []
 
     curIndex = 0
     for (idx, row) in scripsDF.iterrows():
-        totalBuyQuantity, totalSellQuantity = 0,0
+        totalBuyQuantity, totalSellQuantity, dayHigh = 0,0,0
         founddf = intDF.loc[intDF.FullName.str.contains(row.Stock) | (intDF.Symbol == row.Stock.upper())]
         scrip= founddf.iloc[0].Symbol
         smsScrip = founddf.iloc[0].SMSSymbol
-        #Get buy/sell quantity only for top 20 shares.
-        if (curIndex <= 20):
-            totalBuyQuantity, totalSellQuantity, dayHigh = getTotalBuySellVolumes(scrip)
-
+        threshold = founddf.iloc[0].threshold
         row.Symbol = scrip  #This is not assigned correctly
         row.SMSSymbol = smsScrip
-        row.totalBuyQuantity = totalBuyQuantity
-        row.totalSellQuantity = totalSellQuantity
-        row.dayHigh= dayHigh
-        row.buyIndicator = "YES" if (totalBuyQuantity > totalSellQuantity) else "NO"
+        row.threshold = threshold
+        if (curIndex <= 20):
+            topTwenty.append(scrip)
         curIndex += 1
 
+    volumesInfo = getVolumesInfo(topTwenty)
+    curIndex = 0
+    for (idx, row) in scripsDF.iterrows():
+        if (curIndex <= 20):
+            totalBuyQuantity, totalSellQuantity, dayHigh, dayLow, previousClose, latestPrice, pctChange, change = volumesInfo[curIndex]
+            row.totalBuyQuantity = totalBuyQuantity
+            row.totalSellQuantity = totalSellQuantity
+            row.dayHigh= dayHigh
+            row.dayLow = dayLow
+            row.previousClose = previousClose
+            row.curPrice = latestPrice
+            row.gain = pctChange
+            row.buyIndicator = "YES" if (totalBuyQuantity > totalSellQuantity) else "NO"
+        else:
+            break
+        curIndex += 1
+        #  #Get buy/sell quantity only for top 20 shares.
+        # if (curIndex <= 20):
+        #     totalBuyQuantity, totalSellQuantity, dayHigh = getTotalBuySellVolumes(scrip)
 
     return scripsDF
 
-def processResults():
+def getVolumesInfo(scrips):
+    pool = Pool(cpu_count() * 10)  # Creates a Pool with cpu_count * 2 threads.
+
+    #for (idx, row) in intDF.iterrows():
+    results = pool.map(getTotalBuySellVolumes, scrips)  # results is a list of all the placeHolder lists returned from each call to crawlToCSV
+
+    return results
+
+def processResultsScheduled():
+    schedule.every(1).minutes.do(getGainers)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+# processResults()
+# processResultsScheduled()
+
+def getGainers():
     #Get all gainers df
     gainersDF = getLatestGainersDF()
 
@@ -187,25 +219,10 @@ def processResults():
 
     goodScrips = getVolumesForGoodScrips(goodScrips)
 
-
     # print goodScrips
-    bucketSMSList, text = prepareAndSendSMS(goodScrips)
-    #
-    # for key, value in bucketSMSList.items():
-    #     print "SMS: "  + str(key) + " " + (" ".join(value))
-    #
-    # print (strftime("%H:%M:%S", time.localtime()) + ": " + text)
+    bucketSMSList, text = getSMSText(goodScrips )
 
-    # goodScrips = [x.strip(" \t\n\r").encode('ascii') for x in goodScrips]
-    # pprint(goodScrips)
-    # print goodScrips
     return bucketSMSList, text
 
-def processResultsScheduled():
-    schedule.every(1).minutes.do(processResults)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
 
-# processResults()
-# processResultsScheduled()
+

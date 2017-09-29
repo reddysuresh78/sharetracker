@@ -21,25 +21,43 @@ $.ajax({
 	                  
 	  
 	  var trHTML = '';
-	  trHTML += "<tr><th>BKT</th> <th>Symbol</th> <th>Gain</th> <th>CMP</th> <th>High</th> <th>BQty</th> <th>SQty</th> <th>Vol?</th> <th>New?</th> <th>Inc?</th></tr>"
+	  trHTML += "<tr class='table-active'><th>BKT</th> <th>Symbol</th> <th>Gain%</th><th>ActGain</th> <th>CMP</th> <th>High</th> <th>Low</th> <th>Close</th><th>BQty</th> <th>SQty</th> <th>New?</th> <th>Vol?</th>  <th>Inc?</th><th>Thres?</th><th>Score</th></tr>"
 				
 	  $.each(response, function(key, value) {
 		  
 		  $.each(value, function(key1, value1) {
 			  if(value1['buyIndicator'] == 'Y' || value1['newEntrant'] == 'Y' || value1['increased'] == 'Y') {
-				  trHTML += '<tr class="table-success"><td><strong>' + key +   '</strong></td>' 
+				  if(value1['newEntrant'] == 'Y'){ 
+					trHTML += '<tr class="table-danger"><td><strong>' + key +   '</strong></td>' 
+				  }else{
+					trHTML += '<tr class="table-success"><td><strong>' + key +   '</strong></td>'   
+				  }
 			  }else{
 				  trHTML += '<tr><td><strong>' + key +   '</strong></td>' 
 			  }
 			  
 			  
-			  trHTML += '<td>' + value1['symbol'] +  ' </td> ' + '<td>' + value1['gain'] +  ' </td> ' + '<td>' + value1['curPrice'] +  ' </td> ' + '<td>' + value1['dayHigh'] +  ' </td> '+ '<td>' + value1['buyQuantity'] +  ' </td> ' + '<td>' + value1['sellQuantity'] +  ' </td> ' + '<td>' + value1['buyIndicator'] +  ' </td> ' + '<td>' + value1['newEntrant'] +  ' </td> '  
+			  trHTML += '<td>' + value1['symbol'] +  ' </td> ' + '<td>' + value1['gain'] +  ' </td> ' + '<td>' + value1['gainVal'] +  ' </td> ' + '<td>' + value1['curPrice'] +  ' </td> ' + '<td>' + value1['dayHigh'] +  ' </td> '+ '<td>' + value1['dayLow'] +  ' </td> ' + '<td>' + value1['previousClose'] +  ' </td> '+ '<td>' + value1['buyQuantity'] +  ' </td> ' + '<td>' + value1['sellQuantity'] +  ' </td> ' + '<td>' + value1['newEntrant'] +  ' </td> ' + '<td>' + value1['buyIndicator'] +  ' </td> '  
 			  
 			  if( value1['increased'] == 'Y' ){ 
-				trHTML +=  '<td class="bg-primary">' + value1['increased'] +  ' </td> ' 
+				trHTML +=  '<td  >' + value1['increased'] +  ' </td> ' 
 			  }else{
-				trHTML +=  '<td class="bg-warning">' + value1['increased'] +  ' </td> '   
+				trHTML +=  '<td  >' + value1['increased'] +  ' </td> '   
 			  }
+			  if( value1['threshold'] == 'Y' ){ 
+				trHTML +=  '<td  >' + value1['threshold'] +  ' </td> ' 
+			  }else{
+				trHTML +=  '<td  >' + value1['threshold'] +  ' </td> '   
+			  }
+			  
+			  var score = 0
+			  if(value1['newEntrant'] == 'Y') score ++;
+			  if(value1['buyIndicator'] == 'Y') score ++;
+			  if(value1['increased'] == 'Y') score ++;
+			  if(value1['threshold'] == 'Y') score ++;
+			   
+			  
+			  trHTML +=  '<td  >' + score +  ' </td> '   
 			  trHTML += '</tr>'
 		  });
 		  
