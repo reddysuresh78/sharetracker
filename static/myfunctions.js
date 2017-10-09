@@ -16,7 +16,6 @@ else
  
 $.ajax({
   type: 'GET',
-  //url: 'http://localhost:8020/refreshGainers' ,
   url: link ,
   dataType: 'json',
  
@@ -25,7 +24,7 @@ $.ajax({
 	                  
 	  
 	  var trHTML = '';
-	  trHTML += "<tr class='table-active'><th>BKT</th> <th>Symbol</th> <th>Gain%</th><th>ActGain</th> <th>CMP</th> <th>High</th> <th>Low</th> <th>Close</th><th>BQty</th> <th>SQty</th> <th>New?</th> <th>Vol?</th>  <th>Inc?</th><th>Thres?</th><th>Score</th></tr>"
+	  trHTML += "<tr class='table-active'><th>BKT</th> <th>Symbol</th> <th>Change%</th><th>ActChange</th> <th>CMP</th> <th>High</th> <th>Low</th> <th>Close</th><th>BQty</th> <th>SQty</th> <th>New?</th> <th>Vol?</th>  <th>Inc?</th><th>Thres?</th><th>Score</th></tr>"
 				
 	  $.each(response, function(key, value) {
 		  
@@ -71,9 +70,9 @@ $.ajax({
 	
 	if(document.getElementById('autoRefresh').checked) {
 		if(gainers)
-			setTimeout(getLatestList(true), 60000);
+			setTimeout(getLatestList, 60000, true);
 		else
-			setTimeout(getLatestList(false), 60000);
+			setTimeout(getLatestList, 60000, false);
 	} 
 
   },

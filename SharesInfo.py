@@ -18,7 +18,7 @@ class SharesInfo:
         self.intList = loadInterestingStocks()
         self.bucketSMSList = {}
 
-    def filterShares(self):
+    def filter_shares(self):
 
         for scrip in self.df['Stock']:
             founddf = self.intList.loc[
@@ -106,7 +106,10 @@ class SharesInfo:
                 row.previousClose = previousClose
                 row.curPrice = latestPrice
                 row.gain = pctChange
-                row.buyIndicator = "YES" if (totalBuyQuantity > totalSellQuantity) else "NO"
+                if self.type == 'Losers' :
+                    row.buyIndicator = "NO" if (totalBuyQuantity > totalSellQuantity) else "YES"
+                else:
+                    row.buyIndicator = "YES" if (totalBuyQuantity > totalSellQuantity) else "NO"
             else:
                 break
             curIndex += 1
@@ -209,7 +212,7 @@ class SharesInfo:
         fetchCount = next(self.fetchCounter)
         self.df = getSharesInfo(self.sourceLink, fetchCount)
 
-        self.filterShares()
+        self.filter_shares()
 
         self.que.append(self.df)
         result, latestList = self.combineResults()
