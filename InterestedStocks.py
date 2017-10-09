@@ -10,6 +10,13 @@ def loadInterestingStocks():
 
     return df
 
+def loadResultsCalendarStocks():
+
+    df = pd.read_csv("E:\\shares\\BM_All_Forthcoming.csv")
+
+    # df =  df.drop(['Company'], 1)
+
+    return df
 
 
 

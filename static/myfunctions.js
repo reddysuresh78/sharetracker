@@ -1,6 +1,6 @@
 
 
-function show() {
+function getLatestList(gainers) {
 
 $(document).ajaxStart(function(){
     $.LoadingOverlay("show");
@@ -8,12 +8,16 @@ $(document).ajaxStart(function(){
 $(document).ajaxStop(function(){
     $.LoadingOverlay("hide");
 });
- 
+
+if(gainers)
+	link = 'http://localhost:8020/refreshGainers'
+else
+	link = 'http://localhost:8020/refreshLosers'
  
 $.ajax({
   type: 'GET',
   //url: 'http://localhost:8020/refreshGainers' ,
-  url: 'http://localhost:8020/refreshGainers' ,
+  url: link ,
   dataType: 'json',
  
 		
@@ -64,7 +68,13 @@ $.ajax({
 	});
 	
     $('#added-articles').html(trHTML); 
-	 
+	
+	if(document.getElementById('autoRefresh').checked) {
+		if(gainers)
+			setTimeout(getLatestList(true), 60000);
+		else
+			setTimeout(getLatestList(false), 60000);
+	} 
 
   },
   error: function(data){

@@ -12,7 +12,8 @@ from InterestedStocks import *
 from ShareUtils import *
 
 #Global deque
-que = deque(maxlen=10)
+gainersQue = deque(maxlen=10)
+losersQue = deque(maxlen=10)
 
 dayMaxPerShare = {}
 bucketSMSList = {}
@@ -21,14 +22,14 @@ intDF = loadInterestingStocks()
 
 #bucketSMSList.append()
 
-def combineResults():
-    result = pd.concat(list(que))
+def combineGainerResults():
+    result = pd.concat(list(gainersQue))
     result.sort_values(['Stock', 'Seq'], ascending=[False, False], inplace=True)
-    latestList = que[-1].sort_values(['Stock'], ascending=[True], inplace=False)
+    latestList = gainersQue[-1].sort_values(['Stock'], ascending=[True], inplace=False)
 
     return result, latestList['Stock']
 
-def analyzeResults(result, latestList):
+def analyzeGainerResults(result, latestList):
     curMax = result['Seq'].max()
     # print curMax
     scrips = []
@@ -147,7 +148,6 @@ def getVolumesForGoodScrips(scripsDF):
     scripsDF['dayLow'] = ""
     scripsDF['previousClose'] = ""
 
-
     topTwenty = []
 
     curIndex = 0
@@ -213,9 +213,9 @@ def getGainers():
             #print "Removing ", scrip
             gainersDF = gainersDF[gainersDF.Stock != scrip]
 
-    que.append(gainersDF)
-    result, latestList = combineResults()
-    goodScrips = analyzeResults(result, latestList)
+    gainersQue.append(gainersDF)
+    result, latestList = combineGainerResults()
+    goodScrips = analyzeGainerResults(result, latestList)
 
     goodScrips = getVolumesForGoodScrips(goodScrips)
 
@@ -223,6 +223,30 @@ def getGainers():
     bucketSMSList, text = getSMSText(goodScrips )
 
     return bucketSMSList, text
+
+
+def getLosers():
+    #Get all gainers df
+    losersDF = getLatestLosersDF()
+
+    #Remove non F&O shares from it
+    for scrip in losersDF['Stock']:
+        founddf = intDF.loc[intDF.FullName.str.contains(scrip) | (intDF.Symbol == scrip.upper())]
+        if (founddf.empty):
+            #print "Removing ", scrip
+            losersDF = losersDF[losersDF.Stock != scrip]
+
+    losersQue.append(losersDF)
+    result, latestList = combineLoserResults()
+    goodScrips = analyzeLoserResults(result, latestList)
+
+    goodScrips = getVolumesForGoodScrips(goodScrips)
+
+    # print goodScrips
+    bucketSMSList, text = getSMSText(goodScrips )
+
+    return bucketSMSList, text
+
 
 
 

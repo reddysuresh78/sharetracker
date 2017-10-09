@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Losers</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.3/src/loadingoverlay.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@1.5.3/extras/loadingoverlay_progress/loadingoverlay_progress.min.js"></script>
+		 
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.css" type="text/css" rel="stylesheet" /> 
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css" rel="stylesheet" /> 
+		
+        <!-- we code these -->
+        <script src="myfunctions.js"></script>
+		
+		<style type = "text/css">
+         #spinner-1 input {width: 100px}
+		 .table th{
+			border: #ADD8E6 solid 1px !important;
+		}
+		.table td{
+			border: #ADD8E6 solid 1px !important;
+		}
+		.mytable>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+			padding: 8px;
+		}
+      </style>
+	  
+    </head>
+ 
+    <body>
+		<p align="center" style="padding:2px; ">
+            <button class="btn btn-primary" type="button" onclick="getLatestList(false)" align="left">Refresh Losers</button>
+			<input type="checkbox" value="0" name="autoRefresh" id="autoRefresh" /><b>Auto Refresh</b>
+        </p>
+  		
+		<!--
+        <p align="center" style="width:500px;padding:5px;float:left">
+            <button class="btn btn-primary" type="button" onclick="show()" align="left">Refresh Gainers</button>
+        </p>
+	 
+		<p align="center" style="display:none;width:850px;padding:5px;float:right"">
+            <button class="btn btn-primary" type="button" onclick="show()">Refresh Losers</button>
+        </p>
+		
+		<div style="width:500px;padding:10px;float:left" id="content">
+		 -->
+ 
+        <!-- display all articles -->
+        <div style="padding:1px;" id="content" align="center">
+            
+ 
+            <table id="added-articles" class="table-bordered table mytable">
+                <tr>
+                    <th>BKT</th>
+                    <th>Symbol</th>
+                    <th>Change%</th>
+					<th>ActChange</th>
+					<th>CMP</th>
+					<th>High</th>
+					<th>Low</th>
+					<th>Close</th>
+					<th>BQty</th>
+					<th>SQty</th>
+					<th>New?</th>
+					<th>Buy?</th>
+					<th>Dec?</th>
+					<th>Thres?</th>
+					<th>Score</th>
+                </tr>
+            </table>
+        </div>
+		        <!-- display all articles -->
+		<!--
+        <div style="width:800px;padding:10px;float:right" id="content">
+            <h5 style="text-align:center"><i  > Losers </i></h5>
+ 
+            <table id="added-articles" class="table-bordered table-sm">
+                <tr>
+                    <th>BKT</th>
+                    <th>Symbol</th>
+                    <th>Gain</th>
+					<th>CMP</th>
+					<th>High</th>
+					<th>Buy Qty</th>
+					<th>Sell Qty</th>
+					<th>Buy?</th>
+					<th>New?</th>
+					<th>Inc?</th>
+                </tr>
+            </table>
+        </div>
+		-->
+	 
+    </body> 
+</html>
